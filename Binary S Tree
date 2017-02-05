@@ -1,0 +1,162 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package CC;
+
+/**
+ *
+ * @author hp
+ */
+public class Tree 
+{
+    int info;
+   Tree leftchild,rightchild;
+   public void display()
+   {
+       System.out.println(info);
+   }
+   public static void main(String args[])
+   {
+       Treeoper ob=new Treeoper();
+       ob.insert(10);ob.insert(20);ob.insert(30);ob.insert(15);ob.insert(5);
+       ob.insert(7);ob.levelbylevel();ob.delete(20);
+       System.out.println();
+       ob.levelbylevel();
+   }
+}
+class Treeoper
+{
+    public Tree root=null;
+   
+    public void insert(int x)
+    {
+        System.out.println("inserting"+x);
+        Tree current=new Tree();current.info=x;
+        if(root==null)
+        {root=current;return;}
+        
+        Tree parent=parentfinder(x);
+        System.out.println("Parent"+parent.info);
+        if(x<parent.info)
+            parent.leftchild=current;
+        else if(x>parent.info)
+            parent.rightchild=current;
+        else
+            System.out.println("Node already exists");
+    }
+     public Tree parentfinder(int x)
+    {
+        Tree current=root;
+        Tree previous=root;
+        while(current!=null)
+        {
+            if(current.info==x)
+                    {return previous;}
+            if(x>current.info)
+            {previous=current;current=current.rightchild;}
+            else
+            {previous=current;current=current.leftchild;}
+        }
+        return previous;
+    }
+    public Tree findmin(int x)
+    {
+        Tree current=parentfinder(x);
+        if(current.leftchild.info==x)
+            current=current.leftchild;
+        else
+            current=current.rightchild;
+        current=current.rightchild;
+        while(current.leftchild!=null)
+            current=current.leftchild;
+        return current;
+    }
+    public void delete(int x)
+    {
+        Tree current;
+        Tree parent=parentfinder(x);
+        if(parent.leftchild.info==x)
+            current=parent.leftchild;
+        else if(parent.rightchild.info==x)
+            current=parent.rightchild;
+        else
+        {System.out.println("Not found");return;}
+        int method=0;
+        if(current.leftchild==null && current.rightchild==null)
+        {method=1;}
+        else if(current.leftchild==null || current.rightchild==null)
+        {method=2;}
+        else
+            method=3;
+        switch(method)
+        {
+            case 1:
+            {
+                if(parent.leftchild==current)
+                    parent.leftchild=null;
+                else
+                    parent.rightchild=null;break;
+            }
+            case 2:
+            {
+                Tree grandparent=parentfinder(parent.info);
+                if(grandparent.leftchild==parent)
+                    grandparent.leftchild=current;
+                else
+                    grandparent.rightchild=current;
+                break;
+            }
+            case 3:
+            {
+                Tree successor=findmin(current.info);int d=successor.info;
+                
+                delete(successor.info);current.info=d;
+                break;
+            }
+            default:
+                System.out.println("Someting went wrong");
+        }
+    }     
+    public Tree nodefinder(int x)
+    {
+        Tree current=root;
+        while(current.info!=x)
+        {
+            if(current==null)
+            { System.out.println("Node not found");return null;}
+            if(x<current.info)
+                current=current.leftchild;
+            if(x>current.info)
+                current=current.rightchild;
+        }
+        return current;
+    }
+    public void levelbylevel()
+    {
+        Tree temp;
+       implementqueue q=new implementqueue();
+       Tree current=root;q.insert(current.info);int ct=0;int d=0;
+          while(q.front!=null)
+         {
+             q.front.display();
+           q.deletion(q.front.data);
+           if(current.leftchild!=null)
+               q.insert(current.leftchild.info);
+           if(current.rightchild!=null)
+               q.insert(current.rightchild.info);
+           if(q.front==null)
+               break;
+           current=nodefinder(q.front.data);ct++;
+       }
+    }
+    public void inorder(Tree root)
+    {
+        if(root==null)
+            return;
+        inorder(root.leftchild);
+        System.out.println(root.info);
+        inorder(root.rightchild);
+    }
+}

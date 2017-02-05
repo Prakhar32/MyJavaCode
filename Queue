@@ -1,0 +1,75 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package CC;
+
+/**
+ *
+ * @author hp
+ */
+public class Queue 
+{
+   int data;Queue address;
+   public void display()
+   {
+       System.out.print(data+"\t");
+   }
+   public static void main(String args[])
+   {
+       implementqueue q=new implementqueue();
+       q.insert(1);q.insert(4);q.insert(9);q.insert(7);q.insert(14);q.traverse();
+       q.deletion(q.front.data);System.out.println("After deletion");q.traverse();
+       q.deletion(4);System.out.println("After deletion");q.traverse();
+   }
+}
+class implementqueue extends Queue
+{
+    Queue front=null;Queue rear=null;
+    public void insert(int x)
+    {
+        Queue newnode=new Queue();newnode.data=x;
+        if(front==null)
+        {   rear=newnode;front=newnode;return;}
+        rear.address=newnode;
+        rear=newnode;
+    }
+    boolean exists(int x)
+    {
+       Queue current=front;
+       while(current!=null)
+       {
+           if(current.data==x)
+               return true;
+           current=current.address;
+       }
+       return false;
+    }
+    public void deletion(int x)
+    {
+        if(front==null)
+        {System.out.println("Queue is empty");rear=null;return;}
+        if(exists(x)==true)
+        {
+            while(front.data!=x)
+            {
+               front=front.address;
+            }
+            front=front.address;
+        }
+        else
+            System.out.println("Element not found");
+    }
+    public void traverse()
+    {
+        Queue current=front;
+        if(current==null)
+            System.out.println("Empty");
+        while(current!=null)
+        {
+            current.display();
+            current=current.address;
+        }
+    }
+}

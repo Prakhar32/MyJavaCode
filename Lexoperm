@@ -1,0 +1,67 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package CC;
+
+/**
+ *
+ * @author hp
+ */
+public class Lexoperm 
+{
+   int findpivot(int arr[])
+   {
+       int n=0;
+       for(int i=0;i<arr.length-1;i++)
+       {
+           if(arr[i]<arr[i+1])
+               n=i;
+       }
+       return n;
+   }
+   void replacemin(int n,int arr[])
+   {
+       int mingr=arr[n+1];int pos=n+1;
+       for(int i=n+1;i<arr.length;i++)
+       {
+           if(arr[i]>arr[n] && mingr>=arr[i])
+           {mingr=arr[i];pos=i;}
+       }
+       int temp=arr[n];
+       arr[n]=arr[pos];
+       arr[pos]=temp;
+   }
+   void reverse(int n,int arr[])
+   {
+      int i=n+1;double ct=(arr.length-i)/2;Math.ceil(ct);
+      while(ct!=0)
+      {
+          int temp=arr[i];
+          arr[i]=arr[arr.length+n-i];
+          arr[arr.length+n-i]=temp;i++;ct--;
+      }
+   }
+   void display(int arr[])
+   {
+       for(int i=0;i<arr.length;i++)
+           System.out.print(arr[i]);
+   }
+   public static void main(String args[])
+   {
+       int arr[]={0,1,2,3,4,5,6,7,8,9};long start=System.nanoTime();
+       Lexoperm ob=new Lexoperm();
+       int ct=1;
+       do
+       {
+          int n=ob.findpivot(arr);
+          ob.replacemin(n,arr);
+          ob.reverse(n,arr);ct++;
+       }
+       while(ct!=3628800);
+      long stop=System.nanoTime();
+       ob.display(arr);
+       System.out.println("Execution Time "+(stop-start)/(1e+6)+"ms");
+   }
+}

@@ -1,0 +1,191 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+
+/**
+ *
+ * @author hp
+ */
+ import java.lang.*;
+public class AVLTree 
+{
+    int info;AVLTree leftchild;AVLTree rightchild;
+    int height;
+    public static void main(String args[])
+    {
+        implement ob=new implement();
+       ob.root=ob.insert(ob.root, 10); 
+       ob.root= ob.insert(ob.root, 20);
+       ob.root= ob.insert(ob.root, 30);ob.root=ob.insert(ob.root, 40);ob.root=ob.insert(ob.root, 50);
+       ob.root= ob.insert(ob.root, 60);
+       ob.root=ob.insert(ob.root, 15);
+       ob.root=ob.insert(ob.root, 12);
+       ob.root=ob.insert(ob.root, 19);ob.root=ob.insert(ob.root, 17);
+        ob.inorder(ob.root);System.out.println();ob.preorder(ob.root);
+    }
+}
+class implement
+{
+    AVLTree root=null;
+    int max(int a,int b)
+    {
+        int n=0;
+        n=(a>b)?a:b;
+        return n;
+    }
+    AVLTree parentfinder(AVLTree node)
+    {
+        AVLTree current=root,parent=root;
+        if(node==null)
+            return null;
+        while(current!=null)
+        {
+            if(current.info==node.info)
+              break;
+            parent=current;
+             if(current.info>node.info)
+            {current=current.leftchild;}
+            else
+                 current=current.rightchild;
+        }
+        return parent;
+    }
+     AVLTree leftleft(AVLTree node)
+    {
+        AVLTree child,parent;parent=parentfinder(node);boolean isleft=false;
+        if(node==parent.leftchild)
+            isleft=true;
+       
+        child=node.leftchild;
+         AVLTree grandchild=child.leftchild;
+         
+        node.leftchild=child.rightchild;
+        child.rightchild=node;
+       
+        child.height=max(height(child.leftchild),height(child.rightchild))+1;
+        node.height=max(height(node.leftchild),height(node.rightchild))+1;
+        
+        return child;
+    }
+    AVLTree leftright(AVLTree node)
+    {
+       try{ AVLTree child=node.leftchild;AVLTree grandchild=child.rightchild;
+       
+        child.rightchild=grandchild.leftchild;
+        node.leftchild=grandchild;
+        grandchild.leftchild=child;
+        grandchild.height=max(height(grandchild.leftchild),height(grandchild.rightchild))+1;
+        child.height=max(height(child.leftchild),height(child.rightchild))+1;
+        node.height=max(height(node.leftchild),height(node.rightchild))+1;
+        return node;}
+       catch(NullPointerException e)
+       {
+           return node;
+       }
+    }
+    AVLTree rightright(AVLTree node)
+    {
+        AVLTree child=node.rightchild,grandchild=child.rightchild,parent=parentfinder(node);
+        boolean isright=false;
+        if(node==parent.rightchild)
+            isright=true;
+        node.rightchild=child.leftchild;
+        child.leftchild=node;
+        
+        node.height=max(height(node.leftchild),height(node.rightchild))+1;
+        child.height=max(height(child.leftchild),height(child.rightchild))+1;
+        return child;
+    }
+    AVLTree rightleft(AVLTree node)
+    {
+       
+       AVLTree child=node.rightchild,grandchild=child.leftchild;
+       child.leftchild=grandchild.rightchild;
+       grandchild.rightchild=child;
+       node.rightchild=grandchild;
+       child.height=max(height(child.leftchild),height(child.rightchild))+1;
+       grandchild.height=max(height(grandchild.leftchild),height(grandchild.rightchild))+1;
+       return node;
+       
+    }
+    void insertfirst(int x)
+    {
+            AVLTree node=new AVLTree();
+            node.height=1;node.info=x;
+            root=node;
+        
+    }
+    int height(AVLTree node)
+    {
+        if(node==null)
+            return 0;
+        else
+            return node.height;
+    }
+    int getbalance(AVLTree node)
+    {
+        if(node==null)
+            return 0;
+        else
+            return (height(node.leftchild)-height(node.rightchild));
+    }
+    int ct=0;
+    AVLTree insert(AVLTree node,int x)
+    {
+        
+        if(node==null)
+        {
+            node=new AVLTree();node.info=x;node.height=1;return node;
+        }
+        if(node.info>x)
+            node.leftchild=insert(node.leftchild,x);
+        else if(node.info<x)
+            node.rightchild=insert(node.rightchild,x);
+        else
+            return null;
+        node.height=max(height(node.leftchild),height(node.rightchild))+1;ct++;
+        if((height(node.leftchild)-height(node.rightchild))>1 )
+        {    if(x<node.leftchild.info)
+             {node=leftleft(node);return node;}
+        }
+        
+        if((height(node.leftchild)-height(node.rightchild))>1)
+        {
+            if(node.leftchild.info<x)
+                {node= leftright(node);node=leftleft(node);return node;}
+        }
+        
+        if((height(node.leftchild)-height(node.rightchild))<-1)
+        { 
+            if(x>node.rightchild.info)
+            {node=rightright(node);return node;}
+            
+        }
+        if((height(node.leftchild)-height(node.rightchild))<-1)
+        {    if(x<node.rightchild.info)
+              node=rightleft(node);return(rightright(node));
+        }
+        return node;
+    }
+    void inorder(AVLTree node)
+    {
+        if(node!=null)
+        {
+        inorder(node.leftchild);
+        System.out.print(node.info+ " ");
+        inorder(node.rightchild);
+        }
+    }
+    void preorder(AVLTree node)
+    {
+        if(node==null)
+            return;
+        System.out.print(node.info+" ");
+        preorder(node.leftchild);
+        preorder(node.rightchild);
+    
+    }
+}

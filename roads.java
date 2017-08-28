@@ -3,6 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+/*
+Program to create a graph in java using List implementation of graph.
+Includes depth first traversal and Shortest path using backtracking.
+*/
+
 package CC;
 import java.util.*;
 /**
